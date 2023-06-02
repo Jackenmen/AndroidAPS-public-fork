@@ -1,0 +1,49 @@
+name: Pull AndroidAPS from upstream
+
+on:
+  schedule:
+    - cron: 31 * * * *
+  workflow_dispatch:
+    inputs:
+      release_if_needed:
+        description: "Automatically trigger Generate APK workflow if the branch was updated"
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: write
+      contents: write
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v3
+      with:
+        ref: master
+
+    - name: Pull from upstream and push to master
+      id: git-fetch
+      run: |
+        git remote add upstream https://github.com/nightscout/AndroidAPS
+        git fetch upstream
+        if [ "$(git rev-parse upstream/master)" != "$(git rev-parse HEAD)" ]; then
+          echo 'Changes available, pulling and pushing...'
+          git reset --hard upstream/master
+          git push -f
+          echo "CHANGED=1" >> $GITHUB_OUTPUT
+        else
+          echo 'No changes available.'
+          echo "CHANGED=0" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Trigger generate APK workflow.
+      if: ${{ inputs.release_if_needed && steps.git-fetch.outputs.CHANGED == '1' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        gh repo set-default "$GITHUB_REPOSITORY"
+        gh workflow run generate_apk.yaml

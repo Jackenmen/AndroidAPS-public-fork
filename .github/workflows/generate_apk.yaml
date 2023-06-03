@@ -34,7 +34,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: gradle
 
     - name: Create keystore file from KEYSTORE_BASE64
       run: |

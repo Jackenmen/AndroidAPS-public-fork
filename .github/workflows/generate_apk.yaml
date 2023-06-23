@@ -5,6 +5,14 @@ name: Build full Android APK
 on:
   workflow_dispatch:
     inputs:
+      build_branch:
+        description: "Branch to build from"
+        required: true
+        default: jack_patches
+        type: choice
+        options:
+          - master
+          - jack_patches
       perform_release:
         description: "Generate a release with built artifacts"
         required: false
@@ -22,7 +30,7 @@ jobs:
     - name: Checkout the repository
       uses: actions/checkout@v3
       with:
-        ref: master
+        ref: ${{ inputs.build_branch }}
 
     - name: Set current git commit as job output.
       id: git_commit

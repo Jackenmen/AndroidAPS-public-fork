@@ -29,6 +29,7 @@ object MedtronicConst {
         const val SMBBoluses = StatsPrefix + "smb_boluses_delivered"
         const val LastPumpHistoryEntry = StatsPrefix + "pump_history_entry"
         const val LastPrime = StatsPrefix + "last_sent_prime"
+        const val LastNonFixedNonZeroPrime = StatsPrefix + "last_sent_non_fixed_non_zero_prime"
         const val LastRewind = StatsPrefix + "last_sent_rewind"
     }
 }

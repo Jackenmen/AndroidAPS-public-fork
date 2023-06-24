@@ -463,25 +463,52 @@ class MedtronicHistoryData @Inject constructor(
         val maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(GregorianCalendar(), -30)
         var lastPrimeRecordTime = 0L
         var lastPrimeRecord: PumpHistoryEntry? = null
+        var lastNonFixedNonZeroPrimeRecordTime = 0L
+        var lastNonFixedNonZeroPrimeRecord: PumpHistoryEntry? = null
         for (primeRecord in primeRecords) {
-            val fixedAmount = primeRecord.getDecodedDataEntry("FixedAmount")
-            if (fixedAmount != null && fixedAmount as Float == 0.0f) {
-                // non-fixed primes are used to prime the tubing
-                // fixed primes are used to prime the cannula
-                // so skip the prime entry if it was not a fixed prime
+            if (primeRecord.atechDateTime <= maxAllowedTimeInPast) {
                 continue
             }
-            if (primeRecord.atechDateTime > maxAllowedTimeInPast) {
+
+            val fixedAmount = primeRecord.getDecodedDataEntry("FixedAmount")
+            if (fixedAmount != null && fixedAmount as Float != 0.0f) {
+                // fixed prime of 0.0 is not added as an entry by the pump
+                // (if fixedAmount is 0.0, it simply means that this entry is non-fixed prime)
+                // which means that if a cannula doesn't have to be primed,
+                // it won't be recorded which introduces an inconsistency
+                // between how e.g. Sure-T and Quick-Set sets are handled
+                //
+                // Due to the above, we'll be skipping fixed primes
+                // and will only use non-fixed ones
                 if (lastPrimeRecordTime < primeRecord.atechDateTime) {
                     lastPrimeRecordTime = primeRecord.atechDateTime
                     lastPrimeRecord = primeRecord
                 }
+                continue
             }
+
+            val amount = primeRecord.getDecodedDataEntry("Amount")
+            if (amount == null) {
+                continue
+            }
+            if (amount as Float != 0.0f) {
+                // cannula change should occur for non-fixed prime > 0.0 as
+                // it should mean that the tubing of a new set had to be filled
+                if (lastNonFixedNonZeroPrimeRecordTime < primeRecord.atechDateTime) {
+                    lastNonFixedNonZeroPrimeRecordTime = primeRecord.atechDateTime
+                    lastNonFixedNonZeroPrimeRecord = primeRecord
+                }
+            }
+            // otherwise, this is an insulin refill (but not change - same reservoir
+            // may continue to be used)
         }
         if (lastPrimeRecord != null) {
+            sp.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecordTime)
+        }
+        if (lastNonFixedNonZeroPrimeRecord != null) {
             uploadCareportalEventIfFoundInHistory(
-                lastPrimeRecord,
-                MedtronicConst.Statistics.LastPrime,
+                lastNonFixedNonZeroPrimeRecord,
+                MedtronicConst.Statistics.LastNonFixedNonZeroPrime,
                 TE.Type.CANNULA_CHANGE
             )
         }
@@ -500,11 +527,7 @@ class MedtronicHistoryData @Inject constructor(
             }
         }
         if (lastRewindRecord != null) {
-            uploadCareportalEventIfFoundInHistory(
-                lastRewindRecord,
-                MedtronicConst.Statistics.LastRewind,
-                TE.Type.INSULIN_CHANGE
-            )
+            sp.putLong(MedtronicConst.Statistics.LastRewind, lastRewindRecordTime)
         }
     }
 

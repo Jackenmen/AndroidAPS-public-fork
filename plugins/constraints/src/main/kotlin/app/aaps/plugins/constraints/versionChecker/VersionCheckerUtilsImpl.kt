@@ -48,20 +48,21 @@ class VersionCheckerUtilsImpl @Inject constructor(
         if (receiverStatusStore.isKnownNetworkStatus && receiverStatusStore.isConnected) {
             Thread {
                 try {
+                    val currentVersion = config.get().VERSION_NAME.replace("-jack-patches-\\d+$".toRegex(), "")
                     val definition: String = URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/versions/definition.json").readText()
                     val version: String? = AllowedVersions().findByApi(definition, Build.VERSION.SDK_INT)?.optString("supported")
-                    val newVersionAvailable = compareWithCurrentVersion(version, config.get().VERSION_NAME)
+                    val newVersionAvailable = compareWithCurrentVersion(version, currentVersion)
 
                     // App expiration
                     if (newVersionAvailable) {
-                        var endDate = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + config.get().VERSION_NAME, 0)
-                        AllowedVersions().findByVersion(definition, config.get().VERSION_NAME)?.let { expirationJson ->
+                        var endDate = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + currentVersion, 0)
+                        AllowedVersions().findByVersion(definition, currentVersion)?.let { expirationJson ->
                             AllowedVersions().endDateToMilliseconds(expirationJson.getString("endDate"))?.let { ed ->
                                 endDate = ed + T.days(1).msecs()
-                                sp.putLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + config.get().VERSION_NAME, endDate)
+                                sp.putLong(rh.gs(app.aaps.core.utils.R.string.key_app_expiration) + "_" + currentVersion, endDate)
                             }
                         }
-                        if (endDate != 0L) onExpireDateDetected(config.get().VERSION_NAME, dateUtil.dateString(endDate))
+                        if (endDate != 0L) onExpireDateDetected(currentVersion, dateUtil.dateString(endDate))
                     }
 
                 } catch (e: IOException) {

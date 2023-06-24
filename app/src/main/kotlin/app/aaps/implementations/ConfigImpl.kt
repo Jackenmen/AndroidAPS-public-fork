@@ -47,7 +47,8 @@ class ConfigImpl @Inject constructor(
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile
         unfinishedMode = unfinishedModeSemaphore.exists() && unfinishedModeSemaphore.isFile
-        devBranch = VERSION.contains("-") || VERSION.matches(Regex(".*[a-zA-Z]+.*"))
+        val currentVersion = VERSION.replace("-jack-patches-\\d+$".toRegex(), "")
+        devBranch = currentVersion.contains("-") || currentVersion.matches(Regex(".*[a-zA-Z]+.*"))
         if (VERSION.contains("-beta") || VERSION.contains("-rc"))
             devBranch = false
     }

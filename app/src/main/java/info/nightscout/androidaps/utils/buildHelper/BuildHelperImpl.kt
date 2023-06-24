@@ -18,7 +18,8 @@ class BuildHelperImpl constructor(
         val engineeringModeSemaphore = File(fileListProvider.ensureExtraDirExists(), "engineering_mode")
 
         engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile
-        devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(Regex(".*[a-zA-Z]+.*"))
+        val currentVersion = BuildConfig.VERSION.replace("-jack-patches-\\d+$".toRegex(), "")
+        devBranch = currentVersion.contains("-") || currentVersion.matches(Regex(".*[a-zA-Z]+.*"))
     }
 
     override fun isEngineeringModeOrRelease(): Boolean =

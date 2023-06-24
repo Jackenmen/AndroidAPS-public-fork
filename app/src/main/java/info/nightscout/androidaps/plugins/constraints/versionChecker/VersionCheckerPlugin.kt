@@ -60,7 +60,8 @@ class VersionCheckerPlugin @Inject constructor(
         versionCheckerUtils.triggerCheckVersion()
         if (isOldVersion(gracePeriod.veryOld.daysToMillis()))
             value.set(aapsLogger, false, rh.gs(R.string.very_old_version), this)
-        val endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+        val currentVersion = config.VERSION_NAME.replace("-jack-patches-\\d+$".toRegex(), "")
+        val endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + currentVersion, 0)
         if (endDate != 0L && dateUtil.now() > endDate)
             value.set(aapsLogger, false, rh.gs(R.string.application_expired), this)
         return value
@@ -94,7 +95,8 @@ class VersionCheckerPlugin @Inject constructor(
             rxBus.send(EventNewNotification(Notification(Notification.OLD_VERSION, message, Notification.NORMAL)))
         }
 
-        val endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
+        val currentVersion = config.VERSION_NAME.replace("-jack-patches-\\d+$".toRegex(), "")
+        val endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + currentVersion, 0)
         if (endDate != 0L && dateUtil.now() > endDate && shouldWarnAgain()) {
             // store last notification time
             sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)

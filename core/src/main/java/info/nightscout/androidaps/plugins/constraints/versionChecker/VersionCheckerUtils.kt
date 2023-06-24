@@ -49,19 +49,20 @@ class VersionCheckerUtils @Inject constructor(
         if (isConnected()) {
             Thread {
                 try {
+                    val currentVersion = config.VERSION_NAME.replace("-jack-patches-\\d+$".toRegex(), "")
                     val definition: String = URL("https://raw.githubusercontent.com/nightscout/AndroidAPS/versions/definition.json").readText()
                     val version: String? = AllowedVersions().findByApi(definition, Build.VERSION.SDK_INT)?.optString("supported")
-                    compareWithCurrentVersion(version, config.VERSION_NAME)
+                    compareWithCurrentVersion(version, currentVersion)
 
                     // App expiration
-                    var endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
-                    AllowedVersions().findByVersion(definition, config.VERSION_NAME)?.let { expirationJson ->
+                    var endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + currentVersion, 0)
+                    AllowedVersions().findByVersion(definition, currentVersion)?.let { expirationJson ->
                         AllowedVersions().endDateToMilliseconds(expirationJson.getString("endDate"))?.let { ed ->
                             endDate = ed + T.days(1).msecs()
-                            sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + config.VERSION_NAME, endDate)
+                            sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + currentVersion, endDate)
                         }
                     }
-                    if (endDate != 0L) onExpireDateDetected(config.VERSION_NAME, dateUtil.dateString(endDate))
+                    if (endDate != 0L) onExpireDateDetected(currentVersion, dateUtil.dateString(endDate))
 
                 } catch (e: IOException) {
                     aapsLogger.error(LTag.CORE, "Github master version check error: $e")

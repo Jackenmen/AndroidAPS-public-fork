@@ -35,7 +35,8 @@ class VersionCheckerUtilsImpl @Inject constructor(
 
     override fun triggerCheckVersion() {
         val version: String? = AllowedVersions.findByApi(definition, Build.VERSION.SDK_INT)
-        val newVersionByApi = compareWithCurrentVersion(newVersion = version, currentVersion = config.get().VERSION_NAME)
+        val currentVersion = config.get().VERSION_NAME.replace("-jack-patches-\\d+$".toRegex(), "")
+        val newVersionByApi = compareWithCurrentVersion(newVersion = version, currentVersion = currentVersion)
 
         // App expiration
         if (newVersionByApi || config.get().isDev()) {

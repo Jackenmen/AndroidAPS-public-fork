@@ -63,11 +63,16 @@ jobs:
         KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
         KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
+    - name: Copy apk files from different modules to common directory
+      run: |
+        mkdir ~/build-output
+        cp {app,wear}/build/outputs/apk/full/release/*.apk ~/build-output
+
     - name: Upload release artifacts
       uses: actions/upload-artifact@v3
       with:
         name: build-output
-        path: app/build/outputs/apk/full/release
+        path: ~/build-output
 
   release:
     needs: build

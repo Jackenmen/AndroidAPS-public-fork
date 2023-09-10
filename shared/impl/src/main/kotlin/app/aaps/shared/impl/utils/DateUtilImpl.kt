@@ -426,6 +426,19 @@ class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil 
             if (offsetInMilliseconds == 0L) ZoneId.of("UTC")
             else ZoneId.getAvailableZoneIds()
                 .stream()
+                .sorted { zoneId1, zoneId2 ->
+                    if (zoneId1 == "Etc/UTC" || zoneId1.startsWith("Etc/GMT")) {
+                        if (zoneId2 == "Etc/UTC" || zoneId2.startsWith("Etc/GMT")) {
+                            return@sorted zoneId1.compareTo(zoneId2)
+                        }
+                        return@sorted -1
+                    }
+                    if (zoneId2 == "Etc/UTC" || zoneId2.startsWith("Etc/GMT")) {
+                        return@sorted 1
+                    }
+                    return@sorted zoneId1.compareTo(zoneId2)
+                }
+                .filter { zoneId -> zoneId !in arrayOf("Etc/GMT", "Etc/GMT+0", "Etc/GMT0", "Etc/GMT-0") }
                 .map(ZoneId::of)
                 .filter { z -> z.rules.getOffset(Instant.now()).totalSeconds == ZoneOffset.ofHours((offsetInMilliseconds / 1000 / 3600).toInt()).totalSeconds }
                 .collect(Collectors.toList())

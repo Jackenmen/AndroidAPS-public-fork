@@ -440,6 +440,19 @@ class DateUtilImpl @Inject constructor(
         val offsetInSeconds = offsetInMilliseconds.milliseconds.inWholeSeconds.toInt()
         val now = clock.instant()
         return ZoneId.getAvailableZoneIds()
+            .sorted { zoneId1, zoneId2 ->
+                if (zoneId1 == "Etc/UTC" || zoneId1.startsWith("Etc/GMT")) {
+                    if (zoneId2 == "Etc/UTC" || zoneId2.startsWith("Etc/GMT")) {
+                        return@sorted zoneId1.compareTo(zoneId2)
+                    }
+                    return@sorted -1
+                }
+                if (zoneId2 == "Etc/UTC" || zoneId2.startsWith("Etc/GMT")) {
+                    return@sorted 1
+                }
+                return@sorted zoneId1.compareTo(zoneId2)
+            }
+            .filter { zoneId -> zoneId !in arrayOf("Etc/GMT", "Etc/GMT+0", "Etc/GMT0", "Etc/GMT-0") }
             .firstOrNull { zoneIdString ->
                 val zoneId = ZoneId.of(zoneIdString)
                 // Compare the zone's current offset in seconds to the requested offset.

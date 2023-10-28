@@ -21,7 +21,7 @@ jobs:
 
     steps:
     - name: Checkout the repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: master
 
@@ -41,7 +41,7 @@ jobs:
         fi
 
     - name: Trigger generate APK workflow.
-      if: ${{ inputs.release_if_needed && steps.git-fetch.outputs.CHANGED == '1' }}
+      if: ${{ (!inputs || inputs.release_if_needed) && steps.git-fetch.outputs.CHANGED == '1' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |

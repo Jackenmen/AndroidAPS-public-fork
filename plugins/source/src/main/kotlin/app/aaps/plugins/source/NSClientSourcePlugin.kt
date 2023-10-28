@@ -43,6 +43,9 @@ class NSClientSourcePlugin @Inject constructor(
     override fun detectSource(glucoseValue: GV) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {
             isAdvancedFilteringEnabled = arrayOf(
+                SourceSensor.LIBRE_1_OTHER,
+                SourceSensor.LIBRE_2_NATIVE,
+                SourceSensor.LIBRE_3,
                 SourceSensor.DEXCOM_NATIVE_UNKNOWN,
                 SourceSensor.DEXCOM_G6_NATIVE,
                 SourceSensor.DEXCOM_G7_NATIVE,

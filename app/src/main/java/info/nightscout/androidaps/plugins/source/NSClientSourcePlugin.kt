@@ -67,6 +67,8 @@ class NSClientSourcePlugin @Inject constructor(
     private fun detectSource(glucoseValue: GlucoseValue) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {
             isAdvancedFilteringEnabled = arrayOf(
+                GlucoseValue.SourceSensor.UNKNOWN,  // replace with LIBRE_1_OTHER in AAPS 3.2
+                GlucoseValue.SourceSensor.LIBRE_2_NATIVE,
                 GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN,
                 GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE,
                 GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE,

@@ -16,6 +16,7 @@ enum class MedtronicLongNonKey(
     LastPumpHistoryEntry("medtronic_pump_history_entry", 0L),
     LastPrime("medtronic_last_sent_prime", 0L),
     LastNonFixedNonZeroPrime("medtronic_last_sent_non_fixed_non_zero_prime", 0L),
+    LastFixedNonZeroPrime("medtronic_last_sent_fixed_non_zero_prime", 0L),
     LastRewind("medtronic_last_sent_rewind", 0L),
     LastBatteryChange("medtronic_last_sent_battery_change", 0L),
 }

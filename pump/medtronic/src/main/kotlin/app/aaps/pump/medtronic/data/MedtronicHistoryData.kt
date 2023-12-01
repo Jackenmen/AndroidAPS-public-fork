@@ -460,6 +460,8 @@ class MedtronicHistoryData @Inject constructor(
         var lastPrimeRecord: PumpHistoryEntry? = null
         var lastNonFixedNonZeroPrimeRecordTime = 0L
         var lastNonFixedNonZeroPrimeRecord: PumpHistoryEntry? = null
+        var lastFixedNonZeroPrimeRecordTime = 0L
+        var lastFixedNonZeroPrimeRecord: PumpHistoryEntry? = null
         for (primeRecord in primeRecords) {
             if (primeRecord.atechDateTime <= maxAllowedTimeInPast) {
                 continue
@@ -471,13 +473,20 @@ class MedtronicHistoryData @Inject constructor(
                 // (if fixedAmount is 0.0, it simply means that this entry is non-fixed prime)
                 // which means that if a cannula doesn't have to be primed,
                 // it won't be recorded which introduces an inconsistency
-                // between how e.g. Sure-T and Quick-Set sets are handled
-                //
+                // between how steel (Sure-T) and soft cannula (e.g. Quick-Set) sets are handled
+                // I'm only using Mio Advance with soft cannulas so it shouldn't be a concern.
+
                 // Due to the above, we'll be skipping fixed primes
                 // and will only use non-fixed ones
                 if (lastPrimeRecordTime < primeRecord.atechDateTime) {
                     lastPrimeRecordTime = primeRecord.atechDateTime
                     lastPrimeRecord = primeRecord
+                }
+                // cannula change should occur for fixed prime > 0.0 as
+                // it should mean that the cannula of a new set had to be filled
+                if (lastFixedNonZeroPrimeRecordTime < primeRecord.atechDateTime) {
+                    lastFixedNonZeroPrimeRecordTime = primeRecord.atechDateTime
+                    lastFixedNonZeroPrimeRecord = primeRecord
                 }
                 continue
             }
@@ -487,8 +496,8 @@ class MedtronicHistoryData @Inject constructor(
                 continue
             }
             if (amount as Float != 0.0f) {
-                // cannula change should occur for non-fixed prime > 0.0 as
-                // it should mean that the tubing of a new set had to be filled
+                // insulin change (which I treat as reservoir change) should occur
+                // for non-fixed prime > 0.0
                 if (lastNonFixedNonZeroPrimeRecordTime < primeRecord.atechDateTime) {
                     lastNonFixedNonZeroPrimeRecordTime = primeRecord.atechDateTime
                     lastNonFixedNonZeroPrimeRecord = primeRecord
@@ -504,6 +513,13 @@ class MedtronicHistoryData @Inject constructor(
             uploadCareportalEventIfFoundInHistory(
                 lastNonFixedNonZeroPrimeRecord,
                 MedtronicLongNonKey.LastNonFixedNonZeroPrime,
+                TE.Type.INSULIN_CHANGE
+            )
+        }
+        if (lastFixedNonZeroPrimeRecord != null) {
+            uploadCareportalEventIfFoundInHistory(
+                lastFixedNonZeroPrimeRecord,
+                MedtronicLongNonKey.LastFixedNonZeroPrime,
                 TE.Type.CANNULA_CHANGE
             )
         }

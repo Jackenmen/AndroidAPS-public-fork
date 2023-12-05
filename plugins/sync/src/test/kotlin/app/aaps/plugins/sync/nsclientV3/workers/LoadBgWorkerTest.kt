@@ -21,6 +21,7 @@ import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.database.impl.AppDatabase
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3

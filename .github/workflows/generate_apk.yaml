@@ -54,7 +54,7 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: >
-        ./gradlew assembleFullRelease
+        ./gradlew assembleFullRelease app:assembleAapsclientRelease
         "-Pandroid.injected.signing.store.file=$HOME/keystore.p12"
         "-Pandroid.injected.signing.store.password=$STORE_PASSWORD"
         "-Pandroid.injected.signing.key.alias=$KEY_ALIAS"
@@ -68,6 +68,7 @@ jobs:
       run: |
         mkdir ~/build-output
         cp {app,wear}/build/outputs/apk/full/release/*.apk ~/build-output
+        cp app/build/outputs/apk/aapsclient/release/*.apk ~/build-output
 
     - name: Upload release artifacts
       uses: actions/upload-artifact@v3

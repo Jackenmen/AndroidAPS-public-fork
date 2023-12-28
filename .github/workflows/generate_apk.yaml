@@ -50,6 +50,9 @@ jobs:
       env:
         KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
 
+    - name: Set swap space
+      uses: pierotofy/set-swap-space@49819abfb41bd9b44fb781159c033dba90353a7c
+
     # https://github.com/actions/runner-images/issues/6709#issuecomment-1422895201
     # https://github.com/gradle/gradle/issues/19750
     - name: Include gradle's defaults in gradle.properties's jvmargs option

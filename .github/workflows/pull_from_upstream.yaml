@@ -41,7 +41,7 @@ jobs:
         fi
 
     - name: Trigger generate APK workflow.
-      if: ${{ (!inputs || inputs.release_if_needed) && steps.git-fetch.outputs.CHANGED == '1' }}
+      if: (github.event_name != 'workflow_dispatch' || inputs.release_if_needed) && steps.git-fetch.outputs.CHANGED == '1'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |

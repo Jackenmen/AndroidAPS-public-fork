@@ -56,7 +56,10 @@ jobs:
     # https://github.com/actions/runner-images/issues/6709#issuecomment-1422895201
     # https://github.com/gradle/gradle/issues/19750
     - name: Include gradle's defaults in gradle.properties's jvmargs option
-      run: sed '/^org.gradle.jvmargs=/ s/$/ -Xms256m -XX:MaxMetaspaceSize=384m -XX:+HeapDumpOnOutOfMemoryError/' -i gradle.properties
+      run: |
+        mkdir -p ~/.gradle
+        sed -n '/^org.gradle.jvmargs=/p' gradle.properties > ~/.gradle/gradle.properties
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle

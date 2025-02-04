@@ -164,3 +164,27 @@ The necessary secrets are:
 - `KEY_ALIAS` - key's alias in the keystore
 - `KEY_PASSWORD` - password used to decrypt the key stored in the keystore
 - `STORE_PASSWORD` - password used to decrypt the keystore
+
+Consult [AndroidAPS documentation](https://androidaps.readthedocs.io/en/latest/SettingUpAaps/BuildingAaps.html#build-the-aaps-signed-apk) for details on where the keystore is stored. You will also need to know the keystore password, key's alias, and key password.
+
+Once you know where the keystore file is, you will need to base64-encode it.
+If you're familiar with terminal, you can run:
+```
+base64 path/to/keystore.jks
+```
+and copy the output. \
+Otherwise, you can use the following page to encode the file **locally**:
+https://emn178.github.io/online-tools/base64_encode_file.html \
+Other sites may process the content of the file on their servers so you should avoid those unless you really know what you are doing.
+
+Once you have all the values prepared, go to **Settings** tab on your repository's page, expand **Secrets and variables**, and click on **Actions** on the left. Then, do the following for each secret:
+
+1. Click on **New repository secret**.
+
+   !["Secrets and variables - Actions" page](https://github.com/user-attachments/assets/85c38472-dc2c-4a6f-9337-c5828e6bcf85)
+
+2. Type the secret name under **Name**.
+3. Paste the secret value in the **Secret** field.
+4. Click **Add secret**.
+
+   !["Secrets and variables - Actions" page](https://github.com/user-attachments/assets/ecf150fb-2000-4ffc-9e66-d4ba610c5bef)

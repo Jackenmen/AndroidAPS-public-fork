@@ -29,7 +29,7 @@ jobs:
 
     steps:
     - name: Checkout the repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         ref: ${{ inputs.build_branch == 'default' && (vars.DEFAULT_BUILD_BRANCH || 'master') || inputs.build_branch }}
 
@@ -39,7 +39,7 @@ jobs:
         echo "BUILD_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
     - name: Set up JDK 21
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
@@ -81,7 +81,7 @@ jobs:
         cp {app,wear}/build/outputs/apk/full/release/*.apk ~/build-output
 
     - name: Upload release artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-output
         path: ~/build-output
@@ -96,7 +96,7 @@ jobs:
       APK_NAME: app-full-release.apk
     steps:
       - name: Download release artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-output
 
@@ -116,7 +116,7 @@ jobs:
           done
 
       - name: Create a release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version_info.outputs.VERSION_NAME }}
           target_commitish: ${{ needs.build.outputs.build_commit }}

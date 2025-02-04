@@ -120,14 +120,14 @@ To build AndroidAPS APK files, you need to use the **Build full Android APK** wo
 5. After a couple seconds, a new *In progress* workflow run should appear and, eventually (25-30 minutes), it should finish:
 
    ![In progress workflow](https://github.com/user-attachments/assets/ca5f49c0-2f45-4ea3-94e8-f5907a6d4942)
-   ![Finished workflow]()
+   ![Finished workflow](https://github.com/user-attachments/assets/b930bc7a-1f69-4ae1-b990-5b1221803163)
 
 6. When the workflow finishes, you should receive an email notification about a new release on the repository.
    You can visit the release page to download the full APK file for mobile and wearOS app.
 
-   ![Email notification about the release](https://github.com/user-attachments/assets/669db12c-6e3e-4ccb-b53b-01c059876deb)
-   ![Main repository page with the Releases highlighted](https://github.com/user-attachments/assets/4e30cf82-d519-4978-97ab-51a267f76c50)
-   ![Release page](https://github.com/user-attachments/assets/98d14ed4-d49d-4c9e-a703-ecc5747e5714)
+   ![Email notification about the release](https://github.com/user-attachments/assets/5fd6991c-cfbc-4009-abd2-099bb7fe606a)
+   ![Main repository page with the Releases highlighted](https://github.com/user-attachments/assets/7c4c12c6-00ed-40f8-85e2-123fc3ab89a4)
+   ![Release page](https://github.com/user-attachments/assets/08371712-b2e2-4075-b28f-63eee910cab6)
 
 The default branch (used when the option named "default" is selected as the **Branch to build from** in the **Run workflow** popup) to build from is the `master` branch but it can be changed by setting the `DEFAULT_BUILD_BRANCH` GitHub Actions variable to the name of that branch.
 

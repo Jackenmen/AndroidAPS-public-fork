@@ -1,0 +1,39 @@
+name: CI Utils - Update workflows to latest version
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Force push."
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: write
+      contents: write
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+      with:
+        ref: jack/ci-generate-app
+        token: ${{ secrets.UPDATE_TOKEN }}
+
+    - name: Pull from upstream and push to jack/ci-generate-app
+      run: |
+        git remote add upstream https://github.com/Jackenmen/AndroidAPS-public-fork
+        git fetch upstream
+        git reset --hard upstream/jack/ci-generate-app
+
+        if [[ "$FORCE" == 'true' ]]; then
+          git push --force
+        else
+          git push
+        fi
+      env:
+        FORCE: ${{ inputs.force }}

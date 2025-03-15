@@ -97,7 +97,7 @@ class PumpSyncImplementation @Inject constructor(
         }
 
         if (showNotification && (type.description != storedType || serialNumber != storedSerial) && timestamp >= storedTimestamp)
-            rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_DATA, rh.gs(R.string.wrong_pump_data), Notification.URGENT)))
+            rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_DATA, rh.gs(R.string.wrong_pump_data), Notification.URGENT).channel("Wrong pump data")))
         aapsLogger.error(
             LTag.PUMP,
             "Ignoring pump history record  Allowed: ${dateUtil.dateAndTimeAndSecondsString(storedTimestamp)} $storedType $storedSerial Received: $timestamp ${

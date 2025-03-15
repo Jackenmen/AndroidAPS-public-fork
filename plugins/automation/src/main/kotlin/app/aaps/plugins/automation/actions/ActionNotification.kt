@@ -39,7 +39,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_notifications
 
     override fun doAction(callback: Callback) {
-        val notification = NotificationUserMessage(text.value, Notification.URGENT)
+        val notification = NotificationUserMessage(text.value, Notification.URGENT).channel("Automation message")
         rxBus.send(EventNewNotification(notification))
         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = TE.asAnnouncement(text.value),

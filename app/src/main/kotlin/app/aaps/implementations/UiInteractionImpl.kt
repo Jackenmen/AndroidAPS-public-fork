@@ -187,6 +187,10 @@ class UiInteractionImpl @Inject constructor(
         rxBus.send(EventNewNotification(Notification(id, text, level)))
     }
 
+    override fun addNotification(id: Int, text: String, level: Int, channelId: String) {
+        rxBus.send(EventNewNotification(Notification(id, text, level).channel(channelId)))
+    }
+
     override fun addNotificationValidFor(id: Int, text: String, level: Int, validMinutes: Int) {
         rxBus.send(EventNewNotification(Notification(id, text, level, validMinutes)))
     }

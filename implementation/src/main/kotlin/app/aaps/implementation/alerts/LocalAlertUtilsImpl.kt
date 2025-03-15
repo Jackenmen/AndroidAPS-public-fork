@@ -66,7 +66,7 @@ class LocalAlertUtilsImpl @Inject constructor(
             if (preferences.get(BooleanKey.AlertPumpUnreachable)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: true")
                 sp.putLong(app.aaps.core.utils.R.string.key_next_pump_disconnected_alarm, dateUtil.now() + pumpUnreachableThreshold())
-                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(R.string.pump_unreachable), Notification.URGENT).also { it.soundId = R.raw.alarm }))
+                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(R.string.pump_unreachable), Notification.URGENT).channel("Pump unreachable").also { it.soundId = R.raw.alarm }))
                 if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromErrors) && config.APS)
                     disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                         therapyEvent = TE.asAnnouncement(rh.gs(R.string.pump_unreachable)),
@@ -130,7 +130,7 @@ class LocalAlertUtilsImpl @Inject constructor(
             && bgReading.timestamp + missedReadingsThreshold() < dateUtil.now()
             && sp.getLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, 0L) < dateUtil.now()
         ) {
-            val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(R.string.missed_bg_readings), Notification.URGENT)
+            val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(R.string.missed_bg_readings), Notification.URGENT).channel("Missed BG readings")
             n.soundId = R.raw.alarm
             sp.putLong(app.aaps.core.utils.R.string.key_next_missed_reading_alarm, dateUtil.now() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))

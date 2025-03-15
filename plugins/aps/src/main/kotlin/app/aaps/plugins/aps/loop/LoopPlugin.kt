@@ -337,7 +337,7 @@ class LoopPlugin @Inject constructor(
                         ) {
                             if (preferences.get(BooleanKey.AlertCarbsRequired) && !sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
                             ) {
-                                val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
+                                val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL).channel("Carbs required")
                                 rxBus.send(EventNewNotification(carbReqLocal))
                             }
                             if (preferences.get(BooleanKey.NsClientCreateAnnouncementsFromCarbsReq) && config.APS) {

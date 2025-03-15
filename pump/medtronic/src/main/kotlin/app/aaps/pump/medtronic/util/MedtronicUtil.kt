@@ -111,7 +111,8 @@ class MedtronicUtil @Inject constructor(
         uiInteraction.addNotification(
             notificationType.notificationType,
             rh.gs(notificationType.resourceId, *parameters),
-            notificationType.notificationUrgency
+            notificationType.notificationUrgency,
+            (if (notificationType.channelIdSuffix.isNullOrEmpty()) "RileyLink" else "RileyLink - ${notificationType.channelIdSuffix}")
         )
     }
 

@@ -14,6 +14,7 @@ open class Notification {
     @RawRes var soundId: Int? = null
     var action: Runnable? = null
     var buttonText = 0
+    var channelId: String = ""
 
     var contextForAction: Context? = null
 
@@ -49,6 +50,7 @@ open class Notification {
     fun text(text: String): Notification = this.also { it.text = text }
     fun level(level: Int): Notification = this.also { it.level = level }
     fun sound(soundId: Int): Notification = this.also { it.soundId = soundId }
+    fun channel(channelId: String): Notification = this.also { it.channelId = channelId }
 
     companion object {
 

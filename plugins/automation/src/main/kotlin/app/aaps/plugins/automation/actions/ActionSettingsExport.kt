@@ -107,6 +107,7 @@ class ActionSettingsExport(injector: HasAndroidInjector) : Action(injector) {
             notification = NotificationUserMessage(exportResultMessage, Notification.URGENT)
             aapsLogger.info(LTag.AUTOMATION, "Settings export ignored: unattended settings export is disabled")
         }
+        notification = notification.channel("Unattended settings export")
         // send notification
         rxBus.send(EventNewNotification(notification))
 

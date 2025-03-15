@@ -94,6 +94,7 @@ interface UiInteraction {
      */
     fun dismissNotification(id: Int)
     fun addNotification(id: Int, text: String, level: Int)
+    fun addNotification(id: Int, text: String, level: Int, channelId: String)
     fun addNotificationValidFor(id: Int, text: String, level: Int, validMinutes: Int)
     fun addNotificationWithSound(id: Int, text: String, level: Int, @RawRes soundId: Int?)
     fun addNotificationValidTo(id: Int, date: Long, text: String, level: Int, validTo: Long)

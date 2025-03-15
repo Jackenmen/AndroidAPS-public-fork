@@ -48,7 +48,7 @@ class NotificationStore @Inject constructor(
 
     companion object {
 
-        private const val CHANNEL_ID = "AndroidAPS-Overview"
+        private const val DEFAULT_CHANNEL_ID = "AndroidAPS-Overview"
     }
 
     inner class NotificationComparator : Comparator<Notification> {
@@ -115,7 +115,12 @@ class NotificationStore @Inject constructor(
         val largeIcon = rh.decodeResource(iconsProvider.getIcon())
         val smallIcon = iconsProvider.getNotificationIcon()
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+        var channelId = n.channelId
+        if (channelId.isNullOrEmpty()) {
+            channelId = DEFAULT_CHANNEL_ID
+        }
+        createNotificationChannel(channelId)
+        val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(smallIcon)
             .setLargeIcon(largeIcon)
             .setContentText(n.text)
@@ -139,9 +144,9 @@ class NotificationStore @Inject constructor(
         return PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    fun createNotificationChannel() {
+    fun createNotificationChannel(channelId: String = DEFAULT_CHANNEL_ID) {
         val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_HIGH)
+        val channel = NotificationChannel(channelId, channelId, NotificationManager.IMPORTANCE_HIGH)
         mNotificationManager.createNotificationChannel(channel)
     }
 

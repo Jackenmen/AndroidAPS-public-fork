@@ -9,10 +9,11 @@ import app.aaps.pump.medtronic.R
 enum class MedtronicNotificationType(
     var notificationType: Int,
     val resourceId: Int,
-    val notificationUrgency: Int
+    val notificationUrgency: Int,
+    val channelIdSuffix: String = ""
 ) {
 
-    PumpUnreachable(Notification.RILEYLINK_CONNECTION, R.string.medtronic_pump_status_pump_unreachable, Notification.NORMAL),  //
+    PumpUnreachable(Notification.RILEYLINK_CONNECTION, R.string.medtronic_pump_status_pump_unreachable, Notification.NORMAL, "Pump unreachable"),  //
     PumpTypeNotSame(R.string.medtronic_error_pump_type_set_differs_from_detected, Notification.NORMAL),  //
     PumpBasalProfilesNotEnabled(R.string.medtronic_error_pump_basal_profiles_not_enabled, Notification.URGENT),  //
     PumpIncorrectBasalProfileSelected(R.string.medtronic_error_pump_incorrect_basal_profile_selected, Notification.URGENT),  //

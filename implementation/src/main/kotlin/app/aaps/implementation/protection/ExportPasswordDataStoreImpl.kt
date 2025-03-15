@@ -62,7 +62,7 @@ class ExportPasswordDataStoreImpl @Inject constructor(
 
         // On enabling & password expiry (fixed defaults)
         private var exportPasswordStoreIsEnabled = false                   // Set from prefs, disabled by default
-        private var passwordValidityWindow: Long = 35 * 24 * 3600 * 1000L  // 5 weeks (including grace period)
+        private var passwordValidityWindow: Long = 50 * 365 * 24 * 3600 * 1000L  // 50 years (including grace period)
         private var passwordExpiryGracePeriod: Long = 7 * 24 * 3600 * 1000L  // 1 week
     }
 

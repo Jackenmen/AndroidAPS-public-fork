@@ -54,18 +54,17 @@ jobs:
     - name: Set swap space
       uses: pierotofy/set-swap-space@49819abfb41bd9b44fb781159c033dba90353a7c
 
-    # https://github.com/actions/runner-images/issues/6709#issuecomment-1422895201
-    # https://github.com/gradle/gradle/issues/19750
-    - name: Include gradle's defaults in gradle.properties's jvmargs option
-      run: |
-        mkdir -p ~/.gradle
-        sed -n '/^org.gradle.jvmargs=/p' gradle.properties > ~/.gradle/gradle.properties
-
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
       run: >
         ./gradlew assembleFullRelease
+        -Dorg.gradle.jvmargs="-Xmx8g -XX:+UseParallelGC -Xss1024m -XX:MaxMetaspaceSize=256m -XX:+HeapDumpOnOutOfMemoryError"
+        -Dkotlin.daemon.jvm.options="-Xmx2g"
+        -Dkotlin.compiler.execution.strategy="in-process"
+        -Dorg.gradle.daemon=true
+        -Dorg.gradle.workers.max=8
+        -Dorg.gradle.caching=true
         "-Pandroid.injected.signing.store.file=$HOME/keystore.p12"
         "-Pandroid.injected.signing.store.password=$STORE_PASSWORD"
         "-Pandroid.injected.signing.key.alias=$KEY_ALIAS"

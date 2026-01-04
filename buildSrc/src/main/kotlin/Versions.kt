@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 @Suppress("ConstPropertyName")
 object Versions {
 
-    const val appVersion = "3.4.0.0-jack-patches-1"
+    const val appVersion = "3.4.0.0-jack-patches-2"
     const val versionCode = 1500
 
     const val compileSdk = 36
